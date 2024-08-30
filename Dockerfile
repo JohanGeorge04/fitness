@@ -1,5 +1,5 @@
 # Use a Maven image to build the application
-FROM maven:3.8.6-openjdk-17 AS build
+FROM maven:3.8.7-eclipse-temurin-17 AS build
 
 # Set the working directory
 WORKDIR /app
@@ -11,8 +11,8 @@ COPY src ./src
 # Build the application
 RUN mvn clean package -DskipTests
 
-# Use a smaller base image for the final image
-FROM openjdk:17-jdk-slim
+# Use an OpenJDK 17 runtime environment to run the application
+FROM eclipse-temurin:17-jdk-jammy
 
 # Set the working directory
 WORKDIR /app
