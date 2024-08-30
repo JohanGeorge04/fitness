@@ -1,5 +1,3 @@
-// UserController.java
-
 package com.fitness.platform.controller;
 
 import com.fitness.platform.entity.User;
@@ -9,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class UserController {
+
     @Autowired
     private UserService userService;
 
@@ -20,36 +20,32 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String registerUser(User user) {
-        userService.registerUser(user);
-        return "redirect:/login?success=true";
-    }
-
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(Model model) {
+        model.addAttribute("user", new User());
         return "login";
     }
 
     @PostMapping("/login")
-    public String loginUser(User user) {
-        boolean isAuthenticated = userService.loginUser(user);
-        if (isAuthenticated) {
+    public String loginUser(@ModelAttribute("user") User user) {
+        if (userService.loginUser(user)) {
             return "redirect:/dashboard";
-        } else {
-           
-            return "login";
         }
+        return "redirect:/login?logsuccess=false";
     }
 
     @GetMapping("/dashboard")
     public String dashboard() {
         return "dashboard";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute("user") User user) {
+        try {
+            userService.registerUser(user);
+            return "redirect:/login?success=true";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/login?success=false";
+        }
     }
 }

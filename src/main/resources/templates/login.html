@@ -1,183 +1,152 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Fitness App</title>
-    <link rel="stylesheet" href="styles.css">
-	<style>
-	    body {
-	        display: flex;
-	        align-items: center;
-	        justify-content: center;
-	        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	        line-height: 1.6;
-	        min-height: 100vh;
-	        background: #e0e7ff; /* Soft light blue background */
-	        flex-direction: column;
-	        margin: 0;
-	    }
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            background: #e0e7ff;
+            flex-direction: column;
+            margin: 0;
+        }
 
-	    .main {
-	        background-color: #ffffff; /* White background for contrast */
-	        border-radius: 12px;
-	        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	        padding: 25px;
-	        transition: transform 0.3s ease, box-shadow 0.3s ease;
-	        width: 450px;
-	        text-align: center;
-	    }
+        .main {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 450px;
+            text-align: center;
+        }
 
-	    .main:hover {
-	        transform: translateY(-5px);
-	        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-	    }
+        .main:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
 
-	    h2 {
-	        color: #4a4a4a; /* Darker gray for text */
-	        margin-bottom: 15px;
-	    }
+        h2 {
+            color: #4a4a4a;
+            margin-bottom: 15px;
+        }
 
-	    label {
-	        display: block;
-	        width: 100%;
-	        margin-top: 15px;
-	        margin-bottom: 8px;
-	        text-align: left;
-	        color: #6b7280; /* Medium gray color */
-	        font-weight: 600;
-	    }
+        label {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            text-align: left;
+            color: #6b7280;
+            font-weight: 600;
+        }
 
-	    input {
-	        display: block;
-	        width: 100%;
-	        margin-bottom: 20px;
-	        padding: 12px;
-	        box-sizing: border-box;
-	        border: 1px solid #cbd5e1; /* Light gray border */
-	        border-radius: 6px;
-	        font-size: 16px;
-	    }
+        input {
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 16px;
+        }
 
-	    input:focus {
-	        border-color: #6366f1; /* Light blue border on focus */
-	        outline: none;
-	    }
+        input:focus {
+            border-color: #6366f1;
+            outline: none;
+        }
 
-	    button {
-	        padding: 14px;
-	        border-radius: 8px;
-	        margin-top: 15px;
-	        margin-bottom: 15px;
-	        border: none;
-	        color: #ffffff;
-	        cursor: pointer;
-	        background-color: #3b82f6; /* Bright blue button */
-	        width: 100%;
-	        font-size: 16px;
-	        transition: background-color 0.3s ease;
-	    }
+        button {
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            background-color: #3b82f6;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
 
-	    button:hover {
-	        background-color: #2563eb; /* Slightly darker blue on hover */
-	    }
+        button:hover {
+            background-color: #2563eb;
+        }
 
-	    .wrap {
-	        display: flex;
-	        justify-content: center;
-	        align-items: center;
-	    }
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            width: 450px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-	    .form-popup {
-	        display: none;
-	        position: fixed;
-	        top: 50%;
-	        left: 50%;
-	        transform: translate(-50%, -50%);
-	        z-index: 1;
-	        width: 450px; /* Match size of the login form */
-	        padding: 20px;
-	        background-color: #ffffff;
-	        border-radius: 8px;
-	        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	    }
+        .form-popup .btn {
+            background-color: #6366f1;
+            color: white;
+            padding: 14px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
 
-	    .form-popup input[type=text],
-	    .form-popup input[type=password] {
-	        width: 100%;
-	        padding: 14px;
-	        margin: 10px 0 20px 0;
-	        border: 1px solid #cbd5e1;
-	        border-radius: 6px;
-	        background: #f3f4f6;
-	    }
+        .form-popup .cancel {
+            background-color: #6366f1;
+        }
 
-	    .form-popup input[type=text]:focus,
-	    .form-popup input[type=password]:focus {
-	        background-color: #e5e7eb;
-	        border-color: #6366f1;
-	        outline: none;
-	    }
+        .form-popup .btn:hover {
+            opacity: 0.9;
+            background-color: #10b981;
+        }
 
-	    .form-popup .btn {
-	        background-color: #6366f1; /* Green button */
-	        color: white;
-	        padding: 14px;
-	        border: none;
-	        cursor: pointer;
-	        width: 100%;
-	        margin-bottom: 10px;
-	        border-radius: 8px;
-	        transition: background-color 0.3s ease;
-	    }
-
-	    .form-popup .cancel {
-	        background-color:#6366f1; /* Red button */
-	    }
-
-	    .form-popup .btn:hover {
-	        opacity: 0.9;
-	        background-color:#10b981; /* Darker green on hover */
-	    }
-
-	    .form-popup .cancel:hover {
-	        opacity: 0.9;
-	        background-color: #dc2626; /* Darker red on hover */
-	    }
-	</style>
-
-
-
+        .form-popup .cancel:hover {
+            opacity: 0.9;
+            background-color: #dc2626;
+        }
+    </style>
 </head>
-
 <body>
     <div class="main">
         <h2>Login</h2>
         <form id="login-form" th:action="@{/login}" th:object="${user}" method="post">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" th:field="*{username}" required>
 
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" th:field="*{password}" required>
 
             <button type="submit">Login</button>
         </form>
-		<p>Not registered?
-		                 <button class="open-button" onclick="openForm()">Create an account</button>
-		           </p>
-</div>
+        <p>Not registered?
+            <button class="open-button" onclick="openForm()">Create an account</button>
+        </p>
+    </div>
     <div class="form-popup" id="myForm">
-         <form th:action="@{/register}" th:object="${user}" method="post">
+        <form th:action="@{/register}" th:object="${user}" method="post">
             <h1>Register</h1>
 
             <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" required>
+            <input type="text" placeholder="Enter Username" th:field="*{username}" required>
 
             <label for="pass"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password" required>
-
-           
+            <input type="password" placeholder="Enter Password" th:field="*{password}" required>
 
             <button type="submit" class="btn">Register</button>
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
@@ -205,24 +174,19 @@
             document.getElementById('message').style.color = 'green';
             clearUrlParams();
         } else if (success === 'false') {
-            document.getElementById('message').innerText = 'Registration failed. Passwords do not match or an error occurred.';
+            document.getElementById('message').innerText = 'Registration failed. Username already exists or an error occurred.';
             document.getElementById('message').style.color = 'red';
             clearUrlParams();
         }
         if (logsuccess === 'false') {
-            document.getElementById('message').innerText = 'Entered invalid username or password';
+            document.getElementById('message').innerText = 'Invalid username or password';
             document.getElementById('message').style.color = 'red';
             clearUrlParams();
         }
 
         function closeForm() {
             document.getElementById("myForm").style.display = "none";
-            document.getElementById('thank_you').style.display = "none";
         }
-
-       
-       
     </script>
 </body>
-
 </html>

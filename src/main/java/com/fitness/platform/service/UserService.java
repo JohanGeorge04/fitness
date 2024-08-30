@@ -1,5 +1,3 @@
-// UserService.java
-
 package com.fitness.platform.service;
 
 import com.fitness.platform.entity.User;
@@ -24,8 +22,13 @@ public class UserService implements UserDetailsService {
     }
 
     public User registerUser(User user) {
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
+
         return userRepository.save(user);
     }
 
@@ -50,9 +53,9 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
         return org.springframework.security.core.userdetails.User
-            .withUsername(user.getUsername())
-            .password(user.getPassword())
-            .roles(user.getRole())
-            .build();
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .roles(user.getRole())
+                .build();
     }
 }
